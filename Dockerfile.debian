@@ -1,0 +1,24 @@
+# vim:set ft=dockerfile:
+
+FROM debian:buster-slim
+
+# if need no root use : setpriv --reuid=nobody --regid=nogroup --init-groups
+
+# install procps for statistics
+RUN set -eux; \
+	apt -y update; \
+	apt -y upgrade ; \
+	apt install -y --no-install-recommends procps ; \
+	apt clean ; apt -y autoremove ; \
+	rm -rf /var/lib/apt/lists/*
+
+# prepare for false init, classic startup
+
+WORKDIR /
+
+RUN mkdir /docker-entrypoint.d
+
+COPY docker-entrypoint.sh /
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
