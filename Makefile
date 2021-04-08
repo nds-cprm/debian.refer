@@ -4,51 +4,43 @@
 
 name_it = debian
 
-# if need use: ports = "-p 0:0"
+#ports = -p 0:0
 
 ports = 
 
-image_tag = cprm.nds:$(name_it).refer
-
-my_date = $(shell date +%Y%m%d-%H%M%S )
-
-my_uuid = $(shell uuid | sed -e 's/-//;' | cut -b 1-12 )
-
-docker_date = $(my_date)
-
-docker_uid = $(uuid_this)
+image_tag = cprm.nds:$(name_it)2refer
 
 docker_file = Dockerfile.$(name_it)
 
 docker_env = $(name_it).env
 
-docker_name = $(name_it).$(docker_uid)
+container_name = $(name_it)4refer
 
 #
 # make what to make
 #
 
-auto-up: build up 
+auto-up: up 
 
-up: build
+up: 
 
-	docker run --rm --init --detach --name $(docker_name) --env-file $(docker_env) $(ports) $(image_tag) 
+	docker run --init --detach --name $(container_name) --env-file $(docker_env) $(ports) $(image_tag) $(use) 
 
-start: up
+start: 
 	
-	docker container start $(docker_name)
+	docker container start $(container_name)
 
-stop: up
+stop: 
 	
-	docker container stop $(docker_name)
+	docker container stop $(container_name)
 
-clean: up
+clean: stop
 
-	docker container rm $(docker_name) 
+	docker container rm $(container_name) 
 
 build:
 
-	docker build -t $(image_tag) -f $(docker_file) --build-arg "BUILD_DATE=$(docker_date)" .
+	docker build --rm -t $(image_tag) -f $(docker_file) .
 
 razed:
 
@@ -60,7 +52,7 @@ wait:
 
 logs:
 
-	docker logs $(docker_name)
+	docker logs $(container_name)
 
 #smoketest: up
 #

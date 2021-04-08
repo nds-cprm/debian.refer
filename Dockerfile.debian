@@ -8,7 +8,7 @@ FROM debian:buster-slim
 RUN set -eux; \
 	apt -y update; \
 	apt -y upgrade ; \
-	apt install -y --no-install-recommends procps ; \
+	apt install -y --no-install-recommends procps ca-certificates ; \
 	apt clean ; apt -y autoremove ; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -16,9 +16,13 @@ RUN set -eux; \
 
 WORKDIR /
 
-RUN mkdir /docker-entrypoint.d
+RUN mkdir -p /docker-entrypoint.d
 
 COPY docker-entrypoint.sh /
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY stay-alive.sh /
+
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+
+#CMD ["/stay-alive.sh"]
 

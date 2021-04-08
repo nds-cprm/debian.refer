@@ -14,12 +14,12 @@ networks:
 services:
   
     debian-local:
-        env_file: debian-local.env
+        env_file: debian.env
         build: 
             context: ./
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.debian
         image: debian:buster-local
-        container_name: debian4local
+        container_name: debian.refer
         restart: unless-stopped
         stdin_open: true
         # tty: true
